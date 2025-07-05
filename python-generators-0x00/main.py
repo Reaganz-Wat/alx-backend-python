@@ -4,6 +4,7 @@ seed = __import__('seed')
 stream_users = __import__('0-stream_users')
 processing = __import__('1-batch_processing')
 lazy_paginator = __import__('2-lazy_paginate').lazy_pagination
+cal_avg = __import__('4-stream_ages').calculate_average_age
 
 def main():
     connection = seed.connect_db()
@@ -43,8 +44,9 @@ def lazy_pagination():
             print(user)
 
 if __name__ == "__main__":
-    main()
-    stream_data()
-    batch_processing()
-    filter_ages()
-    lazy_pagination()
+    # main()
+    # stream_data()
+    # batch_processing()
+    # filter_ages()
+    # lazy_pagination()
+    cal_avg()
