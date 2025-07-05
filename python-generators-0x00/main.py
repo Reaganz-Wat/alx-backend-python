@@ -2,6 +2,7 @@ from itertools import islice
 
 seed = __import__('seed')
 stream_users = __import__('0-stream_users')
+processing = __import__('1-batch_processing')
 
 def main():
     connection = seed.connect_db()
@@ -27,7 +28,17 @@ def stream_data():
     for x in islice(stream_users.stream_users(), 6):
         print(x)
 
+def batch_processing():
+    for batch in processing.stream_users_in_batches(10):
+        print(batch)
+
+def filter_ages():
+    for batch in processing.batch_processing(10):
+        print(batch)
+
 
 if __name__ == "__main__":
-    # main()
+    main()
     stream_data()
+    batch_processing()
+    filter_ages()
