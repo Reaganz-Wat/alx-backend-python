@@ -1,4 +1,7 @@
-import seed
+from itertools import islice
+
+seed = __import__('seed')
+stream_users = __import__('0-stream_users')
 
 def main():
     connection = seed.connect_db()
@@ -20,5 +23,11 @@ def main():
                 print(row)
             cursor.close()
 
+def stream_data():
+    for x in islice(stream_users.stream_users(), 6):
+        print(x)
+
+
 if __name__ == "__main__":
-    main()
+    # main()
+    stream_data()
