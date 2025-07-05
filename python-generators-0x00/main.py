@@ -3,6 +3,7 @@ from itertools import islice
 seed = __import__('seed')
 stream_users = __import__('0-stream_users')
 processing = __import__('1-batch_processing')
+lazy_paginator = __import__('2-lazy_paginate').lazy_pagination
 
 def main():
     connection = seed.connect_db()
@@ -36,9 +37,14 @@ def filter_ages():
     for batch in processing.batch_processing(10):
         print(batch)
 
+def lazy_pagination():
+    for page in lazy_paginator(10):
+        for user in page:
+            print(user)
 
 if __name__ == "__main__":
     main()
     stream_data()
     batch_processing()
     filter_ages()
+    lazy_pagination()
