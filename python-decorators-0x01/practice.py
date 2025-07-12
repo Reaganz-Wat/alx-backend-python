@@ -1,24 +1,26 @@
-def outer_decorator(func):
-    def outer_wrapper(*args, **kwargs):
-        print("OUTER FUNCTION")
-        value = "Secret from grandparents: be discipline enough to succeed like you are going to do"
-        return func(value, *args, **kwargs)
-    return outer_wrapper
+import asyncio
 
-def inner_decorator(func):
-    def inner_wrapper(value, *args, **kwargs):
-        print("INNER FUNCTION")
-        print("Value got from outer_wrapper:", value)
-        return func(*args, **kwargs)
-    return inner_wrapper
+async def get_all_users():
+    await asyncio.sleep(5)
+    all_users = [{"name":"watmon", "age": 24}, {"name": "okello", "age": 26}]
+    print(all_users)
 
-# @outer_decorator
-# @inner_decorator
-def getName(age):
-    return "Watmon" + " is " + str(age) + " years old"
+async def get_first_user():
+    await asyncio.sleep(2)
+    one_user = [{"name":"watmon", "age": 24}]
+    print(one_user)
 
-# name = getName(24)
-inner_wrapper = inner_decorator(getName)
-outer_wrapper = outer_decorator(inner_wrapper)
-print(outer_wrapper(25))
-# print(name)
+async def main():
+    await asyncio.gather(
+        get_all_users(), get_first_user(), get_name("Eric Jansen")
+    )
+
+async def get_name(name):
+    await asyncio.sleep(0.1)
+    print(name)
+
+print("First line")
+print("Second line")
+asyncio.run(main())
+print("Third line")
+print("Last line")
