@@ -71,11 +71,8 @@ class TestMemoize(unittest.TestCase):
             result1 = instance.a_property
             result2 = instance.a_property
 
-            # Ensure correct value is returned both times
             self.assertEqual(result1, 42)
             self.assertEqual(result2, 42)
-
-            # Ensure a_method is only called once due to memoization
             mock_method.assert_called_once()
 
 
