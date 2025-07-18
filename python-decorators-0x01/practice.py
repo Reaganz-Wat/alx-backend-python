@@ -1,26 +1,65 @@
-import asyncio
+import sqlite3
+import time
 
-async def get_all_users():
-    await asyncio.sleep(5)
-    all_users = [{"name":"watmon", "age": 24}, {"name": "okello", "age": 26}]
-    print(all_users)
+query_cache = {}
 
-async def get_first_user():
-    await asyncio.sleep(2)
-    one_user = [{"name":"watmon", "age": 24}]
-    print(one_user)
+def connect_db(func):
+    def wrapper(*args, **kwargs):
+        connection = sqlite3.connect('users.db')
+        cursor = connection.cursor()
+        result = func(cursor, *args, **kwargs)
+        cursor.close()
+        connection.close()
+        return result
+    return wrapper
 
-async def main():
-    await asyncio.gather(
-        get_all_users(), get_first_user(), get_name("Eric Jansen")
-    )
+def cache_query(func):
+    def wrapper(cursor, *args, **kwargs):
 
-async def get_name(name):
-    await asyncio.sleep(0.1)
-    print(name)
+        keys = (args, tuple(sorted(kwargs.keys())))
+        if keys in query_cache:
+            print("Fetching from cache...")
+            return query_cache[keys]
+        print("Fetching Data from db...")
+        result = func(cursor, *args, **kwargs)
+        query_cache[keys] = result
 
-print("First line")
-print("Second line")
-asyncio.run(main())
-print("Third line")
-print("Last line")
+        return result
+    return wrapper
+
+@connect_db
+@cache_query
+def get_user_data(cursor):
+    results = cursor.execute("SELECT * FROM users").fetchall()
+    return results
+
+@connect_db
+@cache_query
+def get_user_by_id(cursor, id):
+    results = cursor.execute("SELECT * FROM users WHERE id = ?", (id,)).fetchone()
+    return results
+
+print(get_user_data())
+time.sleep(2)
+print("Cache Query: ", query_cache)
+time.sleep(2)
+
+print(get_user_data())
+time.sleep(2)
+print("Cache Query: ", query_cache)
+time.sleep(2)
+
+print(get_user_by_id(1))
+time.sleep(2)
+print("Cache Query: ", query_cache)
+time.sleep(2)
+
+print(get_user_data())
+time.sleep(2)
+print("Cache Query: ", query_cache)
+time.sleep(2)
+
+print(get_user_by_id(2))
+time.sleep(2)
+print("Cache Query: ", query_cache)
+time.sleep(2)
