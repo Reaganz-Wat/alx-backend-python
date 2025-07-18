@@ -46,26 +46,38 @@ class TestGetJson(unittest.TestCase):
         mock_get.assert_called_once_with(test_url)  # Verify correct URL used
         self.assertEqual(result, test_payload)  # Verify returned JSON
 
+
+
 class TestMemoize(unittest.TestCase):
+    """Test case for the memoize decorator."""
+
     def test_memoize(self):
-        """Test that memoize caches the result and avoids recomputation"""
+        """Test that memoize caches the result of a method call."""
 
-        with patch('__main__.TestClass.a_method', return_value=42) as mock_method:
-            class TestClass:
-                def a_method(self):
-                    return 42
+        class TestClass:
+            """Class to test memoization on a method."""
 
-                @memoize
-                def a_property(self):
-                    return self.a_method()
+            def a_method(self) -> int:
+                """Simulate an expensive computation."""
+                return 42
 
-            test_obj = TestClass()
-            result1 = test_obj.a_property()
-            result2 = test_obj.a_property()
+            @memoize
+            def a_property(self) -> int:
+                """Memoized property that calls a_method."""
+                return self.a_method()
 
+        with patch.object(TestClass, 'a_method', return_value=42) as mock_method:
+            instance = TestClass()
+            result1 = instance.a_property
+            result2 = instance.a_property
+
+            # Ensure correct value is returned both times
             self.assertEqual(result1, 42)
             self.assertEqual(result2, 42)
+
+            # Ensure a_method is only called once due to memoization
             mock_method.assert_called_once()
+
 
 if __name__ == "__main__":
     unittest.main()

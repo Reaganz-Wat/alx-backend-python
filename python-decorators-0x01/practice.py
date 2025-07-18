@@ -1,20 +1,23 @@
 import time
 
-import requests
+cache = {}
 
-def timit(func):
+def memoize(func):
     def wrapper(*args, **kwargs):
-        start_time = time.time()
-        results = func(*args, **kwargs)
-        end_time = time.time()
-        print(f"{func.__name__} took {end_time - start_time}s to complete")
+        key = (args, tuple(sorted(kwargs)))
+        if key in cache:
+            print("Picking from cache...")
+            return cache[key]
+        else:
+            print("Making a new network request...")
+            results = func(*args, **kwargs)
+            cache[key] = results
         return results
     return wrapper
 
-@timit
-def getSomethingFromNet(url):
-    response = requests.get(url)
-    return response.json()
+@memoize
+def get_user_by_id(user_id):
+    return {"ID" :user_id, "School": "ABC University"}
 
-for x in getSomethingFromNet("https://api.escuelajs.co/api/v1/products"):
-    print(x)
+if __name__ == "__main__":
+    print(get_user_by_id(2))
