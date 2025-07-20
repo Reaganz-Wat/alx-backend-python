@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Unit tests for GithubOrgClient
+Unit tests for GithubOrgClient.org using parameterized and patch decorators
 """
 
 import unittest
@@ -18,8 +18,8 @@ class TestGithubOrgClient(unittest.TestCase):
     ])
     @patch('client.get_json')
     def test_org(self, org_name, mock_get_json):
-        """Test that GithubOrgClient.org returns expected data and calls get_json once"""
-        mock_payload = {"name": org_name, "id": 123}
+        """Test that GithubOrgClient.org returns correct data and calls get_json once"""
+        mock_payload = {"login": org_name, "id": 1}
         mock_get_json.return_value = mock_payload
 
         client = GithubOrgClient(org_name)
