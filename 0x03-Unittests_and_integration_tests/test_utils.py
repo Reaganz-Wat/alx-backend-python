@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Unit tests for utility functions: access_nested_map, get_json, and memoize."""
+"""
+Unit tests for utility functions:
+access_nested_map, get_json, and memoize.
+"""
 
 import unittest
 from unittest.mock import patch, Mock
@@ -17,8 +20,10 @@ class TestAccessNestedMap(unittest.TestCase):
     ])
     def test_access_nested_map(self, nested_map, path, expected):
         """Test that access_nested_map returns the correct value"""
-        result = access_nested_map(nested_map, path)
-        self.assertEqual(result, expected)
+        self.assertEqual(
+            access_nested_map(nested_map, path),
+            expected
+        )
 
     @parameterized.expand([
         ({}, ("a",), "'a'"),
@@ -69,7 +74,9 @@ class TestMemoize(unittest.TestCase):
                 """Memoized property that calls a_method."""
                 return self.a_method()
 
-        with patch.object(TestClass, 'a_method', return_value=42) as mock_method:
+        with patch.object(
+            TestClass, 'a_method', return_value=42
+        ) as mock_method:
             instance = TestClass()
             result1 = instance.a_property
             result2 = instance.a_property
