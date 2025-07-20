@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+"""Unit tests for utility functions: access_nested_map, get_json, and memoize."""
+
 import unittest
 from unittest.mock import patch, Mock
 from utils import access_nested_map, get_json, memoize
@@ -15,7 +17,8 @@ class TestAccessNestedMap(unittest.TestCase):
     ])
     def test_access_nested_map(self, nested_map, path, expected):
         """Test that access_nested_map returns the correct value"""
-        self.assertEqual(access_nested_map(nested_map, path), expected)
+        result = access_nested_map(nested_map, path)
+        self.assertEqual(result, expected)
 
     @parameterized.expand([
         ({}, ("a",), "'a'"),
@@ -27,25 +30,25 @@ class TestAccessNestedMap(unittest.TestCase):
             access_nested_map(nested_map, path)
         self.assertEqual(str(cm.exception), expected_message)
 
+
 class TestGetJson(unittest.TestCase):
+    """Test cases for get_json"""
+
     @parameterized.expand([
         ("http://example.com", {"payload": True}),
         ("http://holberton.io", {"payload": False}),
     ])
     @patch('utils.requests.get')
     def test_get_json(self, test_url, test_payload, mock_get):
-        # Mock response object
+        """Test that get_json returns correct JSON from URL"""
         mock_response = Mock()
         mock_response.json.return_value = test_payload
         mock_get.return_value = mock_response
 
-        # Call the actual function
         result = get_json(test_url)
 
-        # Assertions
-        mock_get.assert_called_once_with(test_url)  # Verify correct URL used
-        self.assertEqual(result, test_payload)  # Verify returned JSON
-
+        mock_get.assert_called_once_with(test_url)
+        self.assertEqual(result, test_payload)
 
 
 class TestMemoize(unittest.TestCase):
@@ -66,9 +69,7 @@ class TestMemoize(unittest.TestCase):
                 """Memoized property that calls a_method."""
                 return self.a_method()
 
-        with patch.object(
-            TestClass, 'a_method', return_value=42
-        ) as mock_method:
+        with patch.object(TestClass, 'a_method', return_value=42) as mock_method:
             instance = TestClass()
             result1 = instance.a_property
             result2 = instance.a_property
@@ -76,7 +77,6 @@ class TestMemoize(unittest.TestCase):
             self.assertEqual(result1, 42)
             self.assertEqual(result2, 42)
             mock_method.assert_called_once()
-
 
 
 if __name__ == "__main__":
