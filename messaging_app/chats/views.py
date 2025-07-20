@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import viewsets, status
+from django_filters import rest_framework as filters
 from .models import User, Conversation, Message
 from .serializers import UserSerializer, ConversationSerializer, MessageSerializer
 
@@ -10,35 +11,31 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-    class ConversationViewSet(viewsets.ModelViewSet):
-        queryset = Conversation.objects.all()
-        serializer_class = ConversationSerializer
-
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
 
     def create(self, request, *args, **kwargs):
-            # Expect a list of participant IDs in the request
-            participant_ids = request.data.get('participant_ids')
+        # Expect a list of participant IDs in the request
+        participant_ids = request.data.get('participant_ids')
 
-            if not participant_ids or not isinstance(participant_ids, list):
-                return Response({'error': 'participant_ids must be a list of user UUIDs'},
-                                status=status.HTTP_400_BAD_REQUEST)
+        if not participant_ids or not isinstance(participant_ids, list):
+            return Response({'error': 'participant_ids must be a list of user UUIDs'},
+                            status=status.HTTP_400_BAD_REQUEST)
 
-            # Fetch users
-            participants = User.objects.filter(user_id__in=participant_ids)
-            if participants.count() != len(participant_ids):
-                return Response({'error': 'One or more user IDs are invalid'},
-                                status=status.HTTP_400_BAD_REQUEST)
+        # Fetch users
+        participants = User.objects.filter(user_id__in=participant_ids)
+        if participants.count() != len(participant_ids):
+            return Response({'error': 'One or more user IDs are invalid'},
+                            status=status.HTTP_400_BAD_REQUEST)
 
-            # Create conversation
-            conversation = Conversation.objects.create()
-            conversation.participants_id.set(participants)
-            conversation.save()
+        # Create conversation
+        conversation = Conversation.objects.create()
+        conversation.participants_id.set(participants)
+        conversation.save()
 
-            serializer = self.get_serializer(conversation)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        serializer = self.get_serializer(conversation)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
@@ -74,4 +71,3 @@ class MessageViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(message)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
