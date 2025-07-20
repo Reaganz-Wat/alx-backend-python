@@ -1,35 +1,35 @@
 #!/usr/bin/env python3
+"""Unit tests for GithubOrgClient
 """
-Unit tests for GithubOrgClient.org using parameterized and patch decorators
-"""
-
 import unittest
-from unittest.mock import patch
-from parameterized import parameterized
+from unittest.mock import patch, PropertyMock
 from client import GithubOrgClient
 
 
 class TestGithubOrgClient(unittest.TestCase):
-    """Tests for GithubOrgClient.org method"""
+    """Tests for GithubOrgClient"""
 
-    @parameterized.expand([
-        ("google",),
-        ("abc",),
-    ])
     @patch('client.get_json')
-    def test_org(self, org_name, mock_get_json):
-        """Test that GithubOrgClient.org returns correct data and calls get_json once"""
-        mock_payload = {"login": org_name, "id": 1}
-        mock_get_json.return_value = mock_payload
+    def test_org(self, mock_get_json):
+        """Test GithubOrgClient.org returns correct data"""
+        expected_payload = {"login": "test_org"}
+        mock_get_json.return_value = expected_payload
 
-        client = GithubOrgClient(org_name)
-        result = client.org()
+        client = GithubOrgClient("test_org")
+        result = client.org
 
-        mock_get_json.assert_called_once_with(
-            f"https://api.github.com/orgs/{org_name}"
-        )
-        self.assertEqual(result, mock_payload)
+        self.assertEqual(result, expected_payload)
+        mock_get_json.assert_called_once_with("https://api.github.com/orgs/test_org")
+
+    @patch.object(GithubOrgClient, 'org', new_callable=PropertyMock)
+    def test_public_repos_url(self, mock_org):
+        """Test _public_repos_url returns the correct URL"""
+        expected_url = "https://api.github.com/orgs/test_org/repos"
+        mock_org.return_value = {"repos_url": expected_url}
+
+        client = GithubOrgClient("test_org")
+        self.assertEqual(client._public_repos_url, expected_url)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()
