@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
-"""Unit tests for GithubOrgClient
-"""
+"""Unit and integration tests for GithubOrgClient"""
 
 import unittest
 from unittest.mock import patch, PropertyMock
 from parameterized import parameterized, parameterized_class
-import requests
 from client import GithubOrgClient
 from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
 
 
 class TestGithubOrgClient(unittest.TestCase):
-    """Tests for GithubOrgClient"""
+    """Unit tests for GithubOrgClient"""
 
     @patch('client.get_json')
     def test_org(self, mock_get_json):
@@ -55,7 +53,7 @@ class TestGithubOrgClient(unittest.TestCase):
 @parameterized_class(
     ("org_payload", "repos_payload", "expected_repos", "apache2_repos"),
     [
-        (org_payload, repos_payload, expected_repos, apache2_repos)
+        (org_payload, repos_payload, expected_repos, apache2_repos),
     ]
 )
 class TestIntegrationGithubOrgClient(unittest.TestCase):
@@ -76,7 +74,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
                     return self._json
 
                 def raise_for_status(self):
-                    pass  # For simplicity, assume always successful
+                    pass  # Assume success always
 
             if url == f"https://api.github.com/orgs/{cls.org_payload['login']}":
                 return MockResponse(cls.org_payload)
@@ -93,13 +91,11 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     def test_public_repos(self):
         client = GithubOrgClient(self.org_payload["login"])
         repos = client.public_repos()
-
         self.assertEqual(repos, self.expected_repos)
 
     def test_public_repos_with_license(self):
         client = GithubOrgClient(self.org_payload["login"])
         repos = client.public_repos(license="apache-2.0")
-
         self.assertEqual(repos, self.apache2_repos)
 
 
