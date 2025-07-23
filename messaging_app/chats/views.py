@@ -5,6 +5,8 @@ from rest_framework import viewsets, status
 from django_filters import rest_framework as filters
 from .models import User, Conversation, Message
 from .serializers import UserSerializer, ConversationSerializer, MessageSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import CustomTokenObtainPairSerializer
 
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
@@ -71,3 +73,6 @@ class MessageViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(message)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer

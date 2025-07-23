@@ -2,6 +2,7 @@
 
 from rest_framework import serializers
 from .models import User, Conversation, Message
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -165,3 +166,11 @@ class ConversationCreateSerializer(serializers.ModelSerializer):
             conversation.participants_id.add(user)
 
         return conversation
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        # change default ID claim to your custom PK
+        token['user_id'] = str(user.user_id)  # not user.id
+        return token
