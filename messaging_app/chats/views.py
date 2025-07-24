@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 from django_filters import rest_framework as filters
 from .models import User, Conversation, Message
+from .permissions import IsConversationParticipant
 from .serializers import UserSerializer, ConversationSerializer, MessageSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import CustomTokenObtainPairSerializer
@@ -16,6 +18,8 @@ class UserViewSet(viewsets.ModelViewSet):
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
+
+    permission_classes = [IsAuthenticated, IsConversationParticipant]
 
     def create(self, request, *args, **kwargs):
         # Expect a list of participant IDs in the request
