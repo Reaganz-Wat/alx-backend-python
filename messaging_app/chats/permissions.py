@@ -1,8 +1,8 @@
 # chats/permissions.py
 
-from rest_framework.permissions import BasePermission, SAFE_METHODS
+from rest_framework import permissions
 
-class IsSenderOrReadOnly(BasePermission):
+class IsSenderOrReadOnly(permissions.BasePermission):
     """
     Only allow the sender of a message to view/edit/delete it.
     """
@@ -11,7 +11,7 @@ class IsSenderOrReadOnly(BasePermission):
         return obj.sender_id == request.user
 
 
-class IsConversationParticipant(BasePermission):
+class IsConversationParticipant(permissions.BasePermission):
     """
     Only allow participants of a conversation to view or interact with it.
     """
