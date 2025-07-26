@@ -1,9 +1,12 @@
 from django.shortcuts import render
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, filters as drf_filters
 from django_filters import rest_framework as filters
+
+from .filters import MessageFilter
 from .models import User, Conversation, Message
 from .permissions import IsConversationParticipant, IsParticipantOfConversation, IsSenderOrReadOnly
 from .serializers import UserSerializer, ConversationSerializer, MessageSerializer
@@ -85,6 +88,11 @@ class MessageViewSet(viewsets.ModelViewSet):
         IsParticipantOfConversation,
         IsSenderOrReadOnly,
     ]
+
+    filter_backends = [DjangoFilterBackend, drf_filters.OrderingFilter]
+    filterset_class = MessageFilter
+    ordering_fields = ['created_at']
+    ordering = ['-created_at']  # latest first
 
     def get_queryset(self):
         # Only messages in conversations the user participates in
