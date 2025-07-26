@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import viewsets, status
 from django_filters import rest_framework as filters
 from .models import User, Conversation, Message
-from .permissions import IsConversationParticipant
+from .permissions import IsConversationParticipant, IsParticipantOfConversation, IsSenderOrReadOnly
 from .serializers import UserSerializer, ConversationSerializer, MessageSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .serializers import CustomTokenObtainPairSerializer
@@ -43,40 +43,54 @@ class ConversationViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(conversation)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+# class MessageViewSet(viewsets.ModelViewSet):
+#     queryset = Message.objects.all()
+#     serializer_class = MessageSerializer
+#
+#     def create(self, request, *args, **kwargs):
+#         # Expect: conversation_id, sender_id, message_body
+#         conversation_id = request.data.get('conversation_id')
+#         sender_id = request.data.get('sender_id')
+#         message_body = request.data.get('message_body')
+#
+#         if not all([conversation_id, sender_id, message_body]):
+#             return Response({'error': 'conversation_id, sender_id, and message_body are required'},
+#                             status=status.HTTP_400_BAD_REQUEST)
+#
+#         try:
+#             conversation = Conversation.objects.get(conversation_id=conversation_id)
+#             sender = User.objects.get(user_id=sender_id)
+#         except (Conversation.DoesNotExist, User.DoesNotExist):
+#             return Response({'error': 'Invalid conversation or sender ID'},
+#                             status=status.HTTP_404_NOT_FOUND)
+#
+#         # Ensure sender is a participant
+#         if sender not in conversation.participants_id.all():
+#             return Response({'error': 'Sender is not a participant in the conversation'},
+#                             status=status.HTTP_403_FORBIDDEN)
+#
+#         message = Message.objects.create(
+#             conversation=conversation,
+#             sender_id=sender,
+#             message_body=message_body
+#         )
+#
+#         serializer = self.get_serializer(message)
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 class MessageViewSet(viewsets.ModelViewSet):
-    queryset = Message.objects.all()
     serializer_class = MessageSerializer
+    permission_classes = [
+        IsAuthenticated,
+        IsParticipantOfConversation,
+        IsSenderOrReadOnly,
+    ]
 
-    def create(self, request, *args, **kwargs):
-        # Expect: conversation_id, sender_id, message_body
-        conversation_id = request.data.get('conversation_id')
-        sender_id = request.data.get('sender_id')
-        message_body = request.data.get('message_body')
-
-        if not all([conversation_id, sender_id, message_body]):
-            return Response({'error': 'conversation_id, sender_id, and message_body are required'},
-                            status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            conversation = Conversation.objects.get(conversation_id=conversation_id)
-            sender = User.objects.get(user_id=sender_id)
-        except (Conversation.DoesNotExist, User.DoesNotExist):
-            return Response({'error': 'Invalid conversation or sender ID'},
-                            status=status.HTTP_404_NOT_FOUND)
-
-        # Ensure sender is a participant
-        if sender not in conversation.participants_id.all():
-            return Response({'error': 'Sender is not a participant in the conversation'},
-                            status=status.HTTP_403_FORBIDDEN)
-
-        message = Message.objects.create(
-            conversation=conversation,
-            sender_id=sender,
-            message_body=message_body
+    def get_queryset(self):
+        # Only messages in conversations the user participates in
+        return Message.objects.filter(
+            conversation__participants_id=self.request.user
         )
-
-        serializer = self.get_serializer(message)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
