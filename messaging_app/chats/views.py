@@ -64,10 +64,14 @@ class ConversationViewSet(viewsets.ModelViewSet):
 #     ordering = ['-sent_at']  # latest first
 #
 #     def get_queryset(self):
-#         # Only messages in conversations the user participates in
 #         return Message.objects.filter(
-#             conversation__participants_id=self.request.user
+#             conversation__participants_id=self.request.user.user_id
 #         )
+#
+#     def perform_create(self, serializer):
+#         # Automatically assign the sender as the logged-in user
+#         serializer.save(sender_id=self.request.user)
+
 
 
 class MessageViewSet(viewsets.ModelViewSet):
@@ -81,17 +85,37 @@ class MessageViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, drf_filters.OrderingFilter]
     filterset_class = MessageFilter
     ordering_fields = ['sent_at']
-    ordering = ['-sent_at']  # latest first
+    ordering = ['-sent_at']
 
     def get_queryset(self):
+        conversation_id = self.request.query_params.get('conversation_id')
+        if not conversation_id:
+            return Message.objects.none()
+
         return Message.objects.filter(
+            conversation_id=conversation_id,
             conversation__participants_id=self.request.user.user_id
         )
 
-    def perform_create(self, serializer):
-        # Automatically assign the sender as the logged-in user
-        serializer.save(sender_id=self.request.user)
+    def create(self, request, *args, **kwargs):
+        conversation_id = request.data.get('conversation_id')
+        if not conversation_id:
+            return Response({'error': 'conversation_id is required'}, status=status.HTTP_400_BAD_REQUEST)
 
+        try:
+            conversation = Conversation.objects.get(conversation_id=conversation_id)
+        except Conversation.DoesNotExist:
+            return Response({'error': 'Conversation not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Check if user is a participant
+        if not conversation.participants_id.filter(user_id=request.user.user_id).exists():
+            return Response({'error': 'You are not a participant in this conversation'},
+                            status=status.HTTP_403_FORBIDDEN)
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(sender_id=request.user, conversation=conversation)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
