@@ -1,0 +1,185 @@
+{
+	"info": {
+		"_postman_id": "cb75a0b6-b6ff-46ac-a34e-044c1c5ae177",
+		"name": "Messaging_app_alx",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "39680948"
+	},
+	"item": [
+		{
+			"name": "conversations",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjE1NTEyLCJpYXQiOjE3NTM2MTE5MTIsImp0aSI6IjM4OTg5MzQ5MWFkOTQ3ZWNiZThjZWE1ZmI1MGE5NTQ2IiwidXNlcl9pZCI6ImMyMzVmZThmLWFjYzItNDRiZS04YTZkLTc5MzYxMzcyY2Y0NSJ9.GhHop4PWI3INnwgWwDPW_XNYCni_xJIz6u5leqjK5LA"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://127.0.0.1:8000/api/conversations/"
+			},
+			"response": []
+		},
+		{
+			"name": "conversations",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjExMDg2LCJpYXQiOjE3NTM2MDc0ODYsImp0aSI6ImJhNWY1YjA2Y2IzYTRhMGZiODliZGExNDcxZTI3MDVmIiwidXNlcl9pZCI6ImMyMzVmZThmLWFjYzItNDRiZS04YTZkLTc5MzYxMzcyY2Y0NSJ9.dOGXAeOJvBL-HIslpmmsWDNfKtyQxeMY56ReWHOd_6I"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": "http://127.0.0.1:8000/api/conversations/"
+			},
+			"response": []
+		},
+		{
+			"name": "conversations",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjE1NTEyLCJpYXQiOjE3NTM2MTE5MTIsImp0aSI6IjM4OTg5MzQ5MWFkOTQ3ZWNiZThjZWE1ZmI1MGE5NTQ2IiwidXNlcl9pZCI6ImMyMzVmZThmLWFjYzItNDRiZS04YTZkLTc5MzYxMzcyY2Y0NSJ9.GhHop4PWI3INnwgWwDPW_XNYCni_xJIz6u5leqjK5LA"
+					}
+				},
+				"method": "PUT",
+				"header": [],
+				"url": "http://127.0.0.1:8000/api/conversations/"
+			},
+			"response": []
+		},
+		{
+			"name": "conversations",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjE1NTEyLCJpYXQiOjE3NTM2MTE5MTIsImp0aSI6IjM4OTg5MzQ5MWFkOTQ3ZWNiZThjZWE1ZmI1MGE5NTQ2IiwidXNlcl9pZCI6ImMyMzVmZThmLWFjYzItNDRiZS04YTZkLTc5MzYxMzcyY2Y0NSJ9.GhHop4PWI3INnwgWwDPW_XNYCni_xJIz6u5leqjK5LA"
+					}
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": "http://127.0.0.1:8000/api/conversations/"
+			},
+			"response": []
+		},
+		{
+			"name": "conversations",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjE1NTEyLCJpYXQiOjE3NTM2MTE5MTIsImp0aSI6IjM4OTg5MzQ5MWFkOTQ3ZWNiZThjZWE1ZmI1MGE5NTQ2IiwidXNlcl9pZCI6ImMyMzVmZThmLWFjYzItNDRiZS04YTZkLTc5MzYxMzcyY2Y0NSJ9.GhHop4PWI3INnwgWwDPW_XNYCni_xJIz6u5leqjK5LA"
+					}
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": "http://127.0.0.1:8000/api/conversations/"
+			},
+			"response": []
+		},
+		{
+			"name": "users",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjE1NTEyLCJpYXQiOjE3NTM2MTE5MTIsImp0aSI6IjM4OTg5MzQ5MWFkOTQ3ZWNiZThjZWE1ZmI1MGE5NTQ2IiwidXNlcl9pZCI6ImMyMzVmZThmLWFjYzItNDRiZS04YTZkLTc5MzYxMzcyY2Y0NSJ9.GhHop4PWI3INnwgWwDPW_XNYCni_xJIz6u5leqjK5LA"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://127.0.0.1:8000/api/users/"
+			},
+			"response": []
+		},
+		{
+			"name": "auth",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjE1NTEyLCJpYXQiOjE3NTM2MTE5MTIsImp0aSI6IjM4OTg5MzQ5MWFkOTQ3ZWNiZThjZWE1ZmI1MGE5NTQ2IiwidXNlcl9pZCI6ImMyMzVmZThmLWFjYzItNDRiZS04YTZkLTc5MzYxMzcyY2Y0NSJ9.GhHop4PWI3INnwgWwDPW_XNYCni_xJIz6u5leqjK5LA"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "email",
+							"value": "reaganwat@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "123@123",
+							"type": "text"
+						}
+					]
+				},
+				"url": "http://127.0.0.1:8000/api-auth/login"
+			},
+			"response": []
+		},
+		{
+			"name": "message",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjE1NTEyLCJpYXQiOjE3NTM2MTE5MTIsImp0aSI6IjM4OTg5MzQ5MWFkOTQ3ZWNiZThjZWE1ZmI1MGE5NTQ2IiwidXNlcl9pZCI6ImMyMzVmZThmLWFjYzItNDRiZS04YTZkLTc5MzYxMzcyY2Y0NSJ9.GhHop4PWI3INnwgWwDPW_XNYCni_xJIz6u5leqjK5LA"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"conversation\": \"5ce6874f-c819-462b-aee4-f2f061db0f66\",\n  \"message_body\": \"Hey, this is a conversation from the postman\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:8000/api/messages/"
+			},
+			"response": []
+		},
+		{
+			"name": "message",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUzNjE1NTEyLCJpYXQiOjE3NTM2MTE5MTIsImp0aSI6IjM4OTg5MzQ5MWFkOTQ3ZWNiZThjZWE1ZmI1MGE5NTQ2IiwidXNlcl9pZCI6ImMyMzVmZThmLWFjYzItNDRiZS04YTZkLTc5MzYxMzcyY2Y0NSJ9.GhHop4PWI3INnwgWwDPW_XNYCni_xJIz6u5leqjK5LA"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:8000/api/messages/"
+			},
+			"response": []
+		}
+	]
+}
