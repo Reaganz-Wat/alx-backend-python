@@ -1,4 +1,4 @@
-# messaging_app/chats/auth.py
+# Django-Middleware-0x03/chats/auth.py
 
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
