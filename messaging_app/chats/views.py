@@ -15,8 +15,10 @@ from .serializers import CustomTokenObtainPairSerializer
 
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    def get_queryset(self):
+        return User.objects.all()
 
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
@@ -31,6 +33,8 @@ class ConversationViewSet(viewsets.ModelViewSet):
         if not participant_ids or not isinstance(participant_ids, list):
             return Response({'error': 'participant_ids must be a list of user UUIDs'},
                             status=status.HTTP_400_BAD_REQUEST)
+
+        print(participant_ids)
 
         # Fetch users
         participants = User.objects.filter(user_id__in=participant_ids)
@@ -47,39 +51,24 @@ class ConversationViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 # class MessageViewSet(viewsets.ModelViewSet):
-#     queryset = Message.objects.all()
 #     serializer_class = MessageSerializer
+#     permission_classes = [
+#         IsAuthenticated,
+#         IsParticipantOfConversation,
+#         IsSenderOrReadOnly,
+#     ]
 #
-#     def create(self, request, *args, **kwargs):
-#         # Expect: conversation_id, sender_id, message_body
-#         conversation_id = request.data.get('conversation_id')
-#         sender_id = request.data.get('sender_id')
-#         message_body = request.data.get('message_body')
+#     filter_backends = [DjangoFilterBackend, drf_filters.OrderingFilter]
+#     filterset_class = MessageFilter
+#     ordering_fields = ['sent_at']
+#     ordering = ['-sent_at']  # latest first
 #
-#         if not all([conversation_id, sender_id, message_body]):
-#             return Response({'error': 'conversation_id, sender_id, and message_body are required'},
-#                             status=status.HTTP_400_BAD_REQUEST)
-#
-#         try:
-#             conversation = Conversation.objects.get(conversation_id=conversation_id)
-#             sender = User.objects.get(user_id=sender_id)
-#         except (Conversation.DoesNotExist, User.DoesNotExist):
-#             return Response({'error': 'Invalid conversation or sender ID'},
-#                             status=status.HTTP_404_NOT_FOUND)
-#
-#         # Ensure sender is a participant
-#         if sender not in conversation.participants_id.all():
-#             return Response({'error': 'Sender is not a participant in the conversation'},
-#                             status=status.HTTP_403_FORBIDDEN)
-#
-#         message = Message.objects.create(
-#             conversation=conversation,
-#             sender_id=sender,
-#             message_body=message_body
+#     def get_queryset(self):
+#         # Only messages in conversations the user participates in
+#         return Message.objects.filter(
+#             conversation__participants_id=self.request.user
 #         )
-#
-#         serializer = self.get_serializer(message)
-#         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
@@ -91,14 +80,18 @@ class MessageViewSet(viewsets.ModelViewSet):
 
     filter_backends = [DjangoFilterBackend, drf_filters.OrderingFilter]
     filterset_class = MessageFilter
-    ordering_fields = ['created_at']
-    ordering = ['-created_at']  # latest first
+    ordering_fields = ['sent_at']
+    ordering = ['-sent_at']  # latest first
 
     def get_queryset(self):
-        # Only messages in conversations the user participates in
         return Message.objects.filter(
-            conversation__participants_id=self.request.user
+            conversation__participants_id=self.request.user.user_id
         )
+
+    def perform_create(self, serializer):
+        # Automatically assign the sender as the logged-in user
+        serializer.save(sender_id=self.request.user)
+
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
