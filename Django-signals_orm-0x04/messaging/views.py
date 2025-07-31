@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import get_user_model
 from django.db.models import Prefetch
@@ -15,12 +16,15 @@ def show_users(request):
     users = User.objects.all()
     return render(request, 'users.html', context={'users': users})
 
+@login_required
 def conversation_view(request):
-    top_level_messages = Message.objects.filter(parent_message__isnull=True) \
-        .select_related('sender', 'receiver') \
-        .prefetch_related(
-            Prefetch('replies', queryset=Message.objects.select_related('sender'))
-        )
+    top_level_messages = Message.objects.filter(
+        parent_message__isnull=True,
+        sender=request.user
+    ).select_related('sender', 'receiver') \
+     .prefetch_related(
+         Prefetch('replies', queryset=Message.objects.select_related('sender'))
+     )
 
     return render(request, 'conversation.html', {'messages': top_level_messages})
 
