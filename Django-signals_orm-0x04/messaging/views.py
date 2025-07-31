@@ -36,5 +36,5 @@ def get_all_replies(message):
     return replies
 
 def unread_messages_view(request):
-    unread_messages = Message.unread.unread_for_user(request.user)
+    unread_messages = Message.unread.unread_for_user(request.user).only('id', 'content', 'timestamp', 'sender', 'receiver')
     return render(request, 'unread_inbox.html', {'messages': unread_messages})
