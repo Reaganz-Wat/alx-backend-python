@@ -2,6 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import get_user_model
 from django.db.models import Prefetch
+from django.views.decorators.cache import cache_page
+
 from .models import Message
 
 User = get_user_model()
@@ -17,6 +19,7 @@ def show_users(request):
     return render(request, 'users.html', context={'users': users})
 
 @login_required
+@cache_page(60)  # Cache response for 60 seconds
 def conversation_view(request):
     top_level_messages = Message.objects.filter(
         parent_message__isnull=True,
