@@ -34,3 +34,8 @@ def get_all_replies(message):
         replies.append(reply)
         replies.extend(get_all_replies(reply))  # recursive depth-first
     return replies
+
+@login_required
+def unread_messages_view(request):
+    unread_messages = Message.unread.for_user(request.user)
+    return render(request, 'unread_inbox.html', {'messages': unread_messages})
