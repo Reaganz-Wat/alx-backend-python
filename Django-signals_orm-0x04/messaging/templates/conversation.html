@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Conversations</title>
+</head>
+<body>
+<ul>
+{% for msg in messages %}
+    <li>
+        <strong>{{ msg.sender.username }}:</strong> {{ msg.text }}
+        <ul>
+            {% for reply in msg.replies.all %}
+                <li><strong>{{ reply.sender.username }}:</strong> {{ reply.text }}</li>
+            {% endfor %}
+        </ul>
+    </li>
+{% endfor %}
+</ul>
+
+</body>
+</html>

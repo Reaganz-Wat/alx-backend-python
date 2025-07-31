@@ -11,6 +11,14 @@ class Message(models.Model):
     edited_at = models.DateTimeField(null=True, blank=True)
     edited_by = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='edited_messages')
 
+    parent_message = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='replies'
+    )
+
     def __str__(self):
         return f"{self.sender} -> {self.receiver}: {self.content[:30]}"
 
