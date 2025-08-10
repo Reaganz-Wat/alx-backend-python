@@ -18,7 +18,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
-      MYSQLDB: "${MYSQLDB}"        # changed from MYSQL_DATABASE
+      MYSQLDB: "${MYSQL_DB}"        # changed from MYSQL_DATABASE
       MYSQLUSER: "${MYSQLUSER}"    # changed from MYSQL_USER
       MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
     ports:

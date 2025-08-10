@@ -119,7 +119,7 @@ WSGI_APPLICATION = 'Django-Middleware-0x03.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('MYSQLDB', 'messaging_db'),
+        'NAME': os.getenv('MYSQL_DB', 'messaging_db'),
         'USER': os.getenv('MYSQLUSER', 'messaging_user'),
         'PASSWORD': os.getenv('MYSQL_PASSWORD', 'strong_password_here'),
         'HOST': 'db',
