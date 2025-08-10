@@ -119,10 +119,10 @@ WSGI_APPLICATION = 'Django-Middleware-0x03.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('MYSQL_DATABASE', 'messaging_db'),
-        'USER': os.getenv('MYSQL_USER', 'messaging_user'),
+        'NAME': os.getenv('MYSQLDB', 'messaging_db'),
+        'USER': os.getenv('MYSQLUSER', 'messaging_user'),
         'PASSWORD': os.getenv('MYSQL_PASSWORD', 'strong_password_here'),
-        'HOST': 'db',  # matches service name in docker-compose
+        'HOST': 'db',
         'PORT': '3306',
     }
 }
