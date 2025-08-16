@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Exit if any command fails
+set -e
+
+echo "=== Scaling Django App Deployment to 3 replicas ==="
+kubectl scale deployment messaging-app-deployment --replicas=3
+
+echo "=== Waiting for pods to be ready ==="
+kubectl rollout status deployment/messaging-app-deployment
+
+echo "=== Current pods ==="
+kubectl get pods -l app=messaging-app
+
+echo "=== Port-forwarding service to localhost:8000 ==="
+# Run in background
+kubectl port-forward svc/messaging-app-service 8000:8000 >/dev/null 2>&1 &
+PF_PID=$!
+
+# Give port-forward a few seconds to establish
+sleep 5
+
+echo "=== Running load test with wrk (10s, 10 threads, 100 connections) ==="
+wrk -t10 -c100 -d10s http://127.0.0.1:8000/ || echo "wrk not installed. Please install: sudo apt install wrk"
+
+echo "=== Monitoring resource usage (CPU/Memory) ==="
+kubectl top pods || echo "Metrics server may not be installed. Install with: minikube addons enable metrics-server"
+
+# Kill port-forward process
+kill $PF_PID
