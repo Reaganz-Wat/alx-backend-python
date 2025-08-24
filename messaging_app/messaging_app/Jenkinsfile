@@ -14,7 +14,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    credentialsId: 'github-credentials-id',  // Replace with Jenkins credentials ID
+                    credentialsId: 'github-alx-backend',  // Replace with Jenkins credentials ID
                     url: 'https://github.com/Reaganz-Wat/alx-backend-python.git'
             }
         }
@@ -41,7 +41,7 @@ pipeline {
             steps {
                 sh '''
                     . ${VENV}/bin/activate
-                    pytest messaging_app/tests --junitxml=report.xml
+                    python3 manage.py test chats/tests.py --verbosity=2
                 '''
             }
             post {
