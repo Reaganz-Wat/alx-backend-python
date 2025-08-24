@@ -1,7 +1,7 @@
 pipeline {
     agent any
 
-        tools {
+    tools {
         // Requires ShiningPanda plugin for Python virtualenv
         python 'Python3'
     }
@@ -14,7 +14,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    credentialsId: 'github-alx-backend',  // Jenkins credentials ID
+                    credentialsId: 'github-alx-backend',  // Replace with Jenkins credentials ID
                     url: 'https://github.com/Reaganz-Wat/alx-backend-python.git'
             }
         }
@@ -28,16 +28,15 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Install Dependecies') {
             steps {
                 sh '''
-                    . ${VENV}/bin/activate
-                    pip install --upgrade pip
-                    pip install -r messaging_app/requirements.txt
+                pip install --upgrade pip
+                pip3 install -r messaging_app/requirements.txt
                 '''
             }
         }
-
+''
         stage('Run Tests') {
             steps {
                 sh '''
