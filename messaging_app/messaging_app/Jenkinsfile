@@ -67,6 +67,11 @@
 pipeline {
     agent any
 
+        tools {
+        // Requires ShiningPanda plugin for Python virtualenv
+        python 'Python3'
+    }
+
     environment {
         VENV = 'venv'
     }
