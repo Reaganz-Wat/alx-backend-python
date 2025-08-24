@@ -1,16 +1,22 @@
 pipeline {
     agent any
-    
+
     tools {
         // This requires ShiningPanda plugin installed and Python configured in Jenkins
         'jenkins.plugins.shiningpanda.tools.PythonInstallation' 'Python3'
     }
-    
+
     environment {
         VENV = 'venv'
     }
-    
+
     stages {
+        stage('Cleanup Workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+
         stage('Checkout') {
             steps {
                 git branch: 'main',
@@ -18,7 +24,7 @@ pipeline {
                     url: 'https://github.com/Reaganz-Wat/alx-backend-python.git'
             }
         }
-        
+
         stage('Setup Python Environment') {
             steps {
                 sh '''
@@ -28,7 +34,7 @@ pipeline {
                 '''
             }
         }
-        
+
         stage('Install Dependencies') {
             steps {
                 sh '''
@@ -37,7 +43,7 @@ pipeline {
                 '''
             }
         }
-        
+
         stage('Run Tests') {
             steps {
                 sh '''
@@ -57,7 +63,7 @@ pipeline {
             }
         }
     }
-    
+
     post {
         always {
             sh 'rm -rf ${VENV}'
