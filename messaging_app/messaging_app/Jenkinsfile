@@ -32,7 +32,7 @@ pipeline {
             steps {
                 sh '''
                 pip install --upgrade pip
-                pip3 install -r requirements.txt
+                pip3 install -r messaging_app/requirements.txt
                 '''
             }
         }
