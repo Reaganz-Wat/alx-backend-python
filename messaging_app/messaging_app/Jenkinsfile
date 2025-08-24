@@ -43,7 +43,7 @@ pipeline {
                 sh '''
                     . ${VENV}/bin/activate
                     cd messaging_app
-                    python3 manage.py test chats/tests.py --verbosity=2
+                    python3 manage.py test chats --verbosity=2
                 '''
             }
             post {
